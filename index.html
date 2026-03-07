@@ -6431,6 +6431,23 @@ flexibility(document.documentElement);
 	<script>
 		/(trident|msie)/i.test(navigator.userAgent) && document.getElementById && window.addEventListener && window.addEventListener("hashchange", function () { var t, e = location.hash.substring(1); /^[A-z0-9_-]+$/.test(e) && (t = document.getElementById(e)) && (/^(?:a|select|input|button|textarea)$/i.test(t.tagName) || (t.tabIndex = -1), t.focus()) }, !1);
 	</script>
+	<script>
+		// Definir velocidade padrão do vídeo para 1.25x
+		document.addEventListener('DOMContentLoaded', function() {
+			const video = document.querySelector('.elementor-video');
+			if (video) {
+				video.playbackRate = 1.25;
+			}
+		});
+		
+		// Também observar quando o vídeo é carregado para garantir que a velocidade seja aplicada
+		window.addEventListener('load', function() {
+			const video = document.querySelector('.elementor-video');
+			if (video) {
+				video.playbackRate = 1.25;
+			}
+		});
+	</script>
 </body>
 
 </html>
