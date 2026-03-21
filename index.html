@@ -6432,16 +6432,27 @@ flexibility(document.documentElement);
 		/(trident|msie)/i.test(navigator.userAgent) && document.getElementById && window.addEventListener && window.addEventListener("hashchange", function () { var t, e = location.hash.substring(1); /^[A-z0-9_-]+$/.test(e) && (t = document.getElementById(e)) && (/^(?:a|select|input|button|textarea)$/i.test(t.tagName) || (t.tabIndex = -1), t.focus()) }, !1);
 	</script>
 	<script>
-		// Script de Autoplay para VSL
+		// Script de Autoplay Agressivo para VSL
 		// Garante que o vídeo comece automaticamente quando a página carregar
-		document.addEventListener('DOMContentLoaded', function() {
+		
+		function iniciarAutoplayVSL() {
 			const videoElement = document.querySelector('.elementor-video');
+			const overlay = document.querySelector('.elementor-custom-embed-image-overlay');
 			
 			if (videoElement) {
+				// Remove o overlay para que o vídeo fique visível
+				if (overlay) {
+					overlay.style.display = 'none';
+				}
+				
 				// Garante que os atributos estejam definidos
 				videoElement.setAttribute('autoplay', '');
 				videoElement.setAttribute('muted', '');
 				videoElement.setAttribute('playsinline', '');
+				videoElement.setAttribute('loop', '');
+				
+				// Definir velocidade padrão do vídeo para 1.25x
+				videoElement.playbackRate = 1.25;
 				
 				// Tenta reproduzir o vídeo
 				const playPromise = videoElement.play();
@@ -6455,27 +6466,33 @@ flexibility(document.documentElement);
 							console.warn('Autoplay bloqueado pelo navegador:', error);
 						});
 				}
-				
-				// Definir velocidade padrão do vídeo para 1.25x
-				videoElement.playbackRate = 1.25;
 			}
+		}
+		
+		// Executar quando o DOM estiver pronto
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', iniciarAutoplayVSL);
+		} else {
+			iniciarAutoplayVSL();
+		}
+		
+		// Executar novamente quando a página estiver completamente carregada
+		window.addEventListener('load', function() {
+			setTimeout(iniciarAutoplayVSL, 500);
 		});
 		
-		// Fallback: Tenta reproduzir quando o usuário interage com a página
-		document.addEventListener('click', function() {
+		// Observar mudanças no DOM para garantir que o vídeo seja iniciado mesmo se carregado dinamicamente
+		const observer = new MutationObserver(function(mutations) {
 			const videoElement = document.querySelector('.elementor-video');
 			if (videoElement && videoElement.paused) {
-				videoElement.play().catch(err => console.warn('Erro ao reproduzir:', err));
-			}
-		}, { once: true });
-		
-		// Também observar quando o vídeo é carregado para garantir que a velocidade seja aplicada
-		window.addEventListener('load', function() {
-			const video = document.querySelector('.elementor-video');
-			if (video) {
-				video.playbackRate = 1.25;
+				iniciarAutoplayVSL();
 			}
 		});
+		
+		const config = { childList: true, subtree: true, attributes: true };
+		if (document.body) {
+			observer.observe(document.body, config);
+		}
 	</script>
 </body>
 
