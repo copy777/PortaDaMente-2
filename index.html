@@ -4030,7 +4030,7 @@ flexibility(document.documentElement);
 						<div class="e-hosted-video elementor-wrapper elementor-open-inline">
 							<video class="elementor-video"
 								src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663202559769/vNcApHxIxSUEXDuF.mp4" controls=""
-								controlsList="nodownload"></video>
+								controlsList="nodownload" autoplay muted playsinline></video>
 							<div class="elementor-custom-embed-image-overlay"
 								style="background-image: url(https://estudosocultos.shop/wp-content/uploads/2024/09/capa-vsl.jpg);">
 								<div class="elementor-custom-embed-play" role="button" aria-label="Reproduzir vídeo"
@@ -6432,13 +6432,42 @@ flexibility(document.documentElement);
 		/(trident|msie)/i.test(navigator.userAgent) && document.getElementById && window.addEventListener && window.addEventListener("hashchange", function () { var t, e = location.hash.substring(1); /^[A-z0-9_-]+$/.test(e) && (t = document.getElementById(e)) && (/^(?:a|select|input|button|textarea)$/i.test(t.tagName) || (t.tabIndex = -1), t.focus()) }, !1);
 	</script>
 	<script>
-		// Definir velocidade padrão do vídeo para 1.25x
+		// Script de Autoplay para VSL
+		// Garante que o vídeo comece automaticamente quando a página carregar
 		document.addEventListener('DOMContentLoaded', function() {
-			const video = document.querySelector('.elementor-video');
-			if (video) {
-				video.playbackRate = 1.25;
+			const videoElement = document.querySelector('.elementor-video');
+			
+			if (videoElement) {
+				// Garante que os atributos estejam definidos
+				videoElement.setAttribute('autoplay', '');
+				videoElement.setAttribute('muted', '');
+				videoElement.setAttribute('playsinline', '');
+				
+				// Tenta reproduzir o vídeo
+				const playPromise = videoElement.play();
+				
+				if (playPromise !== undefined) {
+					playPromise
+						.then(() => {
+							console.log('VSL iniciada automaticamente com sucesso');
+						})
+						.catch(error => {
+							console.warn('Autoplay bloqueado pelo navegador:', error);
+						});
+				}
+				
+				// Definir velocidade padrão do vídeo para 1.25x
+				videoElement.playbackRate = 1.25;
 			}
 		});
+		
+		// Fallback: Tenta reproduzir quando o usuário interage com a página
+		document.addEventListener('click', function() {
+			const videoElement = document.querySelector('.elementor-video');
+			if (videoElement && videoElement.paused) {
+				videoElement.play().catch(err => console.warn('Erro ao reproduzir:', err));
+			}
+		}, { once: true });
 		
 		// Também observar quando o vídeo é carregado para garantir que a velocidade seja aplicada
 		window.addEventListener('load', function() {
