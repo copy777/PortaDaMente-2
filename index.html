@@ -6493,6 +6493,40 @@ flexibility(document.documentElement);
 		if (document.body) {
 			observer.observe(document.body, config);
 		}
+		
+		// Ativar som automaticamente na primeira interacao do usuario
+		let somAtivado = false;
+		
+		function ativarSom() {
+			if (!somAtivado) {
+				const videoElement = document.querySelector('.elementor-video');
+				if (videoElement) {
+					videoElement.muted = false;
+					videoElement.removeAttribute('muted');
+					
+					// Garantir que o video continue tocando com som
+					const playPromise = videoElement.play();
+					if (playPromise !== undefined) {
+						playPromise
+							.then(() => {
+								console.log('Som ativado com sucesso');
+							})
+							.catch(error => {
+								console.warn('Erro ao ativar som:', error);
+							});
+					}
+					
+					somAtivado = true;
+				}
+			}
+		}
+		
+		// Ouvir primeira interacao do usuario (clique, toque, scroll, etc)
+		const eventosInteracao = ['click', 'touchstart', 'scroll', 'keydown', 'mousemove'];
+		
+		eventosInteracao.forEach(evento => {
+			document.addEventListener(evento, ativarSom, { once: true });
+		});
 	</script>
 </body>
 
