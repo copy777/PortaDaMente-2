@@ -100,7 +100,7 @@ flexibility(document.documentElement);
 <!-- /end HFCM by 99 Robots -->
 <!-- HFCM by 99 Robots - Snippet # 2: UTmify Pixel -->
 <script>
-  window.pixelId = "67b9343f3cda66a46fc8d24a";
+  window.pixelId = "69c0a46f28e4a50da9a8d10f";
   var a = document.createElement("script");
   a.setAttribute("async", "");
   a.setAttribute("defer", "");
